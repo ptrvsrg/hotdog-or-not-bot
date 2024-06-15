@@ -1,0 +1,28 @@
+application:
+  major_version: $MAJOR_VERSION
+  minor_version: $MINOR_VERSION
+  patch_version: $PATCH_VERSION
+  locale_dir: $LOCALE_DIR
+detect_model:
+  path: $DETECT_MODEL_PATH
+predict_model:
+  path: $PREDICT_MODEL_PATH
+bot:
+  telegram_token: $TELEGRAM_TOKEN
+  owner_username: $OWNER_USERNAME
+  webhook_url: $WEBHOOK_URL
+postgres:
+  host: $POSTGRES_HOST
+  port: $POSTGRES_PORT
+  user: $POSTGRES_USER
+  password: $POSTGRES_PASSWORD
+  db: $POSTGRES_DB
+redis:
+  host: $REDIS_HOST
+  port: $REDIS_PORT
+  user: $REDIS_USER
+  password: $REDIS_PASSWORD
+  db: $REDIS_DB
+server:
+  debug: $DEBUG
+  port: $PORT
