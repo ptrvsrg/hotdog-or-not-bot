@@ -83,3 +83,17 @@ async def list_banned_users(callback: CallbackQuery):
 
     await callback.message.answer(content)
     logger.info(f"{get_username_from_callback(callback)}: List banned users")
+
+
+@router.callback_query(MainMenuCallbackFactory.filter(F.action == "list_admins"))
+async def list_admins(callback: CallbackQuery):
+    admins = user_service.get_admins()
+    if len(admins) > 0:
+        content = trans("message.list_admins") + "\n"
+        for admin in admins:
+            content += "\n@" + admin.username
+    else:
+        content = trans("message.no_admins")
+
+    await callback.message.answer(content)
+    logger.info(f"{get_username_from_callback(callback)}: List admins")
