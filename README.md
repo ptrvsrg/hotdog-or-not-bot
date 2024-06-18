@@ -17,6 +17,7 @@ that Jian Yang developed? This app identifies whether something is hotdog or not
 + Detecting objects in the photo
 + Hotdog prediction
 + Telegram bot
++ Saving dataset to Yandex Disk
 
 ## Technologies
 
@@ -26,6 +27,7 @@ that Jian Yang developed? This app identifies whether something is hotdog or not
 - [OpenCV](https://opencv.org/)
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [i18next](https://pypi.org/project/i18next/)
+- [yadisk](https://yadisk.readthedocs.io/ru/latest/)
 
 ## Requirements
 
