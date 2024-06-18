@@ -110,6 +110,9 @@ async def process_select_image(
     # Download image
     answer = await callback.message.answer(t("message.image_processing"))
     file_id = (await get_from_state(state, "photo_map"))[str(callback_data.message_id)]
+    if file_id is None:
+        await callback.message.answer(t("error.file_not_found"))
+        return
     try:
         file_bytes = (await download_file(callback.bot, file_id)).read()
     except TelegramBadRequest as e:
@@ -149,6 +152,9 @@ async def feedback_prediction(
 ):
     # Download image
     file_id = (await get_from_state(state, "photo_map"))[str(callback_data.message_id)]
+    if file_id is None:
+        await callback.message.answer(t("error.file_not_found"))
+        return
     try:
         file_bytes = (await download_file(callback.bot, file_id)).read()
     except TelegramBadRequest as e:
