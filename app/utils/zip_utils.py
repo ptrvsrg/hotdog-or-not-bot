@@ -16,9 +16,9 @@ def zip_cropped_images(images: List[np.ndarray]) -> io.BytesIO:
         None
     """
     zip_file = io.BytesIO()
-    with zipfile.ZipFile(zip_file, 'w') as zf:
+    with zipfile.ZipFile(zip_file, "w") as zf:
         for i, image in enumerate(images):
-            zf.writestr(f'object_{i}.jpg', image.tobytes())
+            zf.writestr(f"object_{i}.jpg", image.tobytes())
     zip_file.seek(0)
 
     return zip_file

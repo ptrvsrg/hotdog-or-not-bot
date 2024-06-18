@@ -13,7 +13,7 @@ class SubscriptionDto:
     def from_orm(cls, subscription: Subscription):
         return cls(
             name=subscription.name,
-            total_daily_predictions=subscription.total_daily_predictions
+            total_daily_predictions=subscription.total_daily_predictions,
         )
 
 
@@ -34,7 +34,7 @@ class StatisticsDto:
             successful_predictions=statistics.successful_predictions,
             failed_predictions=statistics.failed_predictions,
             hotdog_predictions=statistics.hotdog_predictions,
-            not_hotdog_predictions=statistics.not_hotdog_predictions
+            not_hotdog_predictions=statistics.not_hotdog_predictions,
         )
 
 
@@ -56,5 +56,5 @@ class UserDto:
             is_admin=user.is_admin,
             is_owner=user.username == config.bot.owner_username,
             subscription=SubscriptionDto.from_orm(user.subscription),
-            statistics=StatisticsDto.from_orm(user.statistics)
+            statistics=StatisticsDto.from_orm(user.statistics),
         )

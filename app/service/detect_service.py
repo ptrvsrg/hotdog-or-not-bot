@@ -51,7 +51,7 @@ class DetectService:
         cropped_images: list[bytes] = []
         for i, box in enumerate(boxes):
             x1, y1, x2, y2 = box
-            img = image[int(y1):int(y2), int(x1):int(x2)]
+            img = image[int(y1) : int(y2), int(x1) : int(x2)]
             cropped_img = postprocess_image(img)
             cropped_images.append(cropped_img)
 

@@ -6,6 +6,9 @@ from app.utils.image_utils import preprocess_image
 
 
 class PredictService:
+
+    CLASSIFICATION_THRESHOLD = 0.5
+
     def __init__(self, model_file: str) -> None:
         """
         Initializes the PredictService class with a given model file.

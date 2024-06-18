@@ -1,41 +1,45 @@
-import logging
-
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
-from i18next import trans
+from i18next import trans as t
 
 from app.bot.callback_data import MainMenuCallbackFactory
 from app.bot.utils.callback_utils import get_username_from_callback
 from app.service import user_service
 
 router = Router(name="profile")
-logger = logging.getLogger("profile")
 
 
 @router.callback_query(MainMenuCallbackFactory.filter(F.action == "show_profile"))
 async def show_profile(callback: CallbackQuery):
+    # Find user
     username = get_username_from_callback(callback)
-
-    logger.info(f"{get_username_from_callback(callback)}: Get user info for {username}")
     user = user_service.get_user_by_username(username)
     if user is None:
-        await callback.message.answer(trans("error.user_not_found"))
+        await callback.message.answer(t("error.user_not_found"))
         return
 
+    # Get role
     if user.is_owner:
-        role = trans("message.owner")
+        role = t("message.owner")
     elif user.is_admin:
-        role = trans("message.admin")
+        role = t("message.admin")
     else:
-        role = trans("message.user")
+        role = t("message.user")
 
+    # Get subscription status
     if user.subscription.total_daily_predictions == -1:
-        limit_remainder = trans("message.unlimited")
+        limit_remainder = t("message.unlimited")
     else:
-        remaining_predictions = user.subscription.total_daily_predictions - user.statistics.daily_predictions
-        limit_remainder = f"{remaining_predictions}/{user.subscription.total_daily_predictions}"
+        remaining_predictions = (
+            user.subscription.total_daily_predictions
+            - user.statistics.daily_predictions
+        )
+        limit_remainder = (
+            f"{remaining_predictions}/{user.subscription.total_daily_predictions}"
+        )
 
-    content = trans(
+    # Show message
+    content = t(
         "message.user_profile",
         params={
             "username": user.username,
@@ -47,9 +51,7 @@ async def show_profile(callback: CallbackQuery):
             "not_hotdog_predictions": user.statistics.not_hotdog_predictions,
             "successful_predictions": user.statistics.successful_predictions,
             "failed_predictions": user.statistics.failed_predictions,
-            "limit_remainder": limit_remainder
+            "limit_remainder": limit_remainder,
         },
     )
-
     await callback.message.answer(content)
-    logger.info(f"{get_username_from_callback(callback)}: Show profile")

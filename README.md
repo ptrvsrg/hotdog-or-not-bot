@@ -63,7 +63,7 @@ pip install -r requirements.txt
 > **_NOTE:_** Run in a separate terminal.
 
 > **_NOTE:_** ngrok is a globally distributed reverse proxy. We will use it to test the webhook.
-After launching we have to copy forwarding URL.
+> After launching we have to copy forwarding URL.
 
 ```shell
 ngrok http 8080
@@ -71,7 +71,7 @@ ngrok http 8080
 
 5. Set up environment variables
 
-> **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL from ngrok\>/webhook 
+> **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL from ngrok\>/webhook
 
 ```shell
 cp .env.exmaple .env

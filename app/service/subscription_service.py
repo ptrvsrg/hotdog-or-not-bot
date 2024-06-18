@@ -1,7 +1,6 @@
 import logging
 from typing import Optional
 
-from app.db.entity import Subscription, User
 from app.db.repository import SubscriptionRepository
 from app.service.dto import SubscriptionDto
 
@@ -20,7 +19,9 @@ class SubscriptionService:
         """
         self.logger.info("Get all subscriptions")
         subscriptions = self.subscription_repository.find_all_order_by_name_asc()
-        return [SubscriptionDto.from_orm(subscription) for subscription in subscriptions]
+        return [
+            SubscriptionDto.from_orm(subscription) for subscription in subscriptions
+        ]
 
     def get_by_name(self, name: str) -> Optional[SubscriptionDto]:
         """

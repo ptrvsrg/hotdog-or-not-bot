@@ -12,7 +12,7 @@ def is_image(file: BinaryIO) -> bool:
         bool: True if the file is a JPEG or JPG image, False otherwise.
     """
     file_type = imghdr.what(file)
-    return file_type in ['jpeg', 'jpg']
+    return file_type in ["jpeg", "jpg"]
 
 
 def get_size(file: BinaryIO):

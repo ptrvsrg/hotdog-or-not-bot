@@ -1,4 +1,4 @@
-from app.service import statistics_service, user_service
+from app.service import statistics_service
 
 
 def clear_daily_prediction_job():
