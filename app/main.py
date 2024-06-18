@@ -15,7 +15,7 @@ def run_app():
     # Start server
     try:
         import uvicorn
-        from app.http import app
+        from app.http_server import app
 
         uvicorn.run(
             app,

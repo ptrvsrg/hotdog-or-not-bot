@@ -28,6 +28,9 @@ def create_main_menu(username: str) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text=trans("button.list_banned_users"),
                                  callback_data=MainMenuCallbackFactory(
                                      action="list_banned_users").pack()),
+            InlineKeyboardButton(text=trans("button.list_admins"),
+                                 callback_data=MainMenuCallbackFactory(
+                                     action="list_admins").pack()),
         ]
 
     owner_buttons = []
