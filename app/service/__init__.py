@@ -1,6 +1,7 @@
 from app.config import config
 from app.db.repository import user_repository, subscription_repository, statistics_repository
 from app.service.detect_service import DetectService
+from app.service.yandex_disk_service import YandexDiskService
 from app.service.exception.user_exceptions import UserNotFoundException, DuplicateUserException, \
     UserAlreadyAdminException, UserAlreadyBannedException, UserNotBannedException, \
     UserNotAdminException
@@ -23,6 +24,10 @@ user_service = UserService(
     subscription_repository,
     statistics_repository
 )
+yandex_disk_service = YandexDiskService(
+    config.yandex_disk.api_key.get_secret_value(),
+    config.yandex_disk.base_dir
+)
 
 __all__ = [
     "detect_service",
@@ -40,4 +45,6 @@ __all__ = [
     "UserAlreadyBannedException",
     "UserNotBannedException",
     "UserNotAdminException",
+
+    "yandex_disk_service",
 ]

@@ -1,5 +1,6 @@
 from aiogram.filters.callback_data import CallbackData
 
 
-class ResultCallbackFactory(CallbackData, prefix="result"):
+class ResultFeedbackCallbackFactory(CallbackData, prefix="result"):
     action: str
+    message_id: int

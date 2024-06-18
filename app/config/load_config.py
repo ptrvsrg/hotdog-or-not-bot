@@ -42,6 +42,10 @@ def load_config() -> ConfigModel:
             "password": os.getenv("REDIS_PASSWORD"),
             "db": os.getenv("REDIS_DB")
         },
+        "yandex_disk": {
+            "api_key": os.getenv("YANDEX_DISK_API_KEY"),
+            "base_dir": os.getenv("YANDEX_DISK_BASE_DIR", "hotdog_or_not")
+        },
         "server": {
             "debug": os.getenv("DEBUG", False),
             "port": os.getenv("PORT", 8080)
