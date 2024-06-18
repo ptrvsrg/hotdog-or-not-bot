@@ -14,6 +14,6 @@ logger = logging.getLogger("cancel")
 
 @router.callback_query(CancelCallbackFactory.filter())
 async def cancel(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer(trans("message.canceled"))
     await state.clear()
+    await callback.message.delete()
     logger.info(f"{get_username_from_callback(callback)}: Cancel the operation")
