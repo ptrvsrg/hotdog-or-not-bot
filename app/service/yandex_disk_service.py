@@ -16,6 +16,14 @@ class YandexDiskService:
         self.base_dir = base_dir
 
     async def upload_file(self, file_bytes, folder_name):
+        """
+        Asynchronously uploads a file to Yandex Disk.
+        Parameters:
+            file_bytes (bytes): The content of the file in bytes.
+            folder_name (str): The name of the folder where the file will be uploaded.
+        Returns:
+            None
+        """
         # Create a hash for the filename
         file_hash = hashlib.md5(file_bytes).hexdigest()
         file_path = f"{self.base_dir}/{folder_name}/{file_hash}.jpg"
@@ -25,10 +33,17 @@ class YandexDiskService:
 
         # Upload file
         io = BytesIO(file_bytes)
-        await self.client.upload(io, file_path)
+        await self.client.upload(io, file_path, overwrite=True)
         self.logger.info(f"File uploaded: {file_path}")
 
     async def _make_dir(self, folder):
+        """
+        Asynchronously creates a folder in Yandex Disk.
+        Parameters:
+            folder (str): The name of the folder to be created.
+        Returns:
+            None
+        """
         path = ""
         for folder_name in folder.split("/"):
             path = f"{path}/{folder_name}"
