@@ -1,6 +1,5 @@
 aiogram~=3.7.0
 APScheduler~=3.10.4
-envyaml~=1.10.211231
 fastapi~=0.111.0
 i18next~=0.0.3
 numpy~=1.26.4
