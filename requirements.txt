@@ -1,11 +1,11 @@
 aiogram~=3.7.0
 APScheduler~=3.10.4
-envyaml~=1.10.211231
 fastapi~=0.111.0
 i18next~=0.0.3
 numpy~=1.26.4
 opencv-python~=4.10.0.82
-pydantic~=2.7.2
-ultralytics~=8.2.27
+pydantic~=2.7.3
+ultralytics~=8.2.28
 yoyo-migrations~=8.2.0
 SQLAlchemy~=2.0.30
+yadisk~=2.1.0

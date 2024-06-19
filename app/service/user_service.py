@@ -2,7 +2,11 @@ import logging
 from typing import Optional
 
 from app.db.entity import User, Statistics
-from app.db.repository import UserRepository, SubscriptionRepository, StatisticsRepository
+from app.db.repository import (
+    UserRepository,
+    SubscriptionRepository,
+    StatisticsRepository,
+)
 from app.service.dto import UserDto
 from app.service.exception.user_exceptions import (
     DuplicateUserException,
@@ -20,7 +24,7 @@ class UserService:
         owner_username: str,
         user_repository: UserRepository,
         subscription_repository: SubscriptionRepository,
-        statistics_repository: StatisticsRepository
+        statistics_repository: StatisticsRepository,
     ):
         self.owner_username = owner_username
         self.user_repository = user_repository
@@ -54,8 +58,9 @@ class UserService:
         self.logger.info(f"Exists user by username: {username}")
         return self.user_repository.exists_by_username(username)
 
-    def create_user(self, username: str, is_enabled: bool = True,
-                    is_admin: bool = False) -> UserDto:
+    def create_user(
+        self, username: str, is_enabled: bool = True, is_admin: bool = False
+    ) -> UserDto:
         """
         Asynchronously creates a new user in the database.
         Args:
@@ -71,21 +76,19 @@ class UserService:
         if self.exists_user_by_username(username):
             raise DuplicateUserException(username)
 
-        subscription = self.subscription_repository.find_by_name('Free')
+        subscription = self.subscription_repository.find_by_name("Free")
         if subscription is None:
-            raise Exception('Subscription not found')
+            raise Exception("Subscription not found")
 
         user = User(
             username=username,
             subscription_id=subscription.id,
             is_enabled=is_enabled,
-            is_admin=is_admin
+            is_admin=is_admin,
         )
         self.user_repository.save(user)
 
-        statistics = Statistics(
-            user_id=user.id
-        )
+        statistics = Statistics(user_id=user.id)
         self.statistics_repository.save(statistics)
 
         return UserDto.from_orm(user)

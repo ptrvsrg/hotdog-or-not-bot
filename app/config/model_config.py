@@ -38,6 +38,11 @@ class RedisConfigModel(BaseModel):
     db: int
 
 
+class YandexDiskConfigModel(BaseModel):
+    api_key: SecretStr
+    base_dir: str
+
+
 class ServerConfigModel(BaseModel):
     debug: bool
     port: int
@@ -50,4 +55,5 @@ class ConfigModel(BaseModel):
     predict_model: PredictModelConfigModel
     postgres: PostgresConfigModel
     redis: RedisConfigModel
+    yandex_disk: YandexDiskConfigModel
     server: ServerConfigModel

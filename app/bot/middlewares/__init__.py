@@ -5,9 +5,9 @@ from app.bot.middlewares.register_middleware import RegisterMiddleware
 from app.bot.middlewares.subscription_limit_filter import SubscriptionLimitFilter
 
 __all__ = [
-    "RegisterMiddleware",
     "BanMiddleware",
-    "ExceptionMiddleware",
     "CallbackAnswerMiddleware",
+    "ExceptionMiddleware",
+    "RegisterMiddleware",
     "SubscriptionLimitFilter",
 ]
