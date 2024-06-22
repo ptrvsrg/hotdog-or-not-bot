@@ -1,0 +1,184 @@
+version: '3'
+
+volumes:
+  postgres-data:
+  pgadmin_data:
+  s3-data:
+  zookeeper-data:
+  kafka-data:
+
+networks:
+  hotdog-or-not-net:
+
+services:
+  #################################
+  ###### PostgreSQL Database ######
+  #################################
+  postgres:
+    image: postgres:alpine3.20
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-hotdog_or_not_bot}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - hotdog-or-not-net
+  postgres-ui:
+    image: dpage/pgadmin4:8.5
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-user@mail.ru}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-password}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'wget -O - http://localhost:80/misc/ping' ]
+      interval: 5s
+      timeout: 5s
+      retries: 50
+    ports:
+      - ${PGADMIN_PORT:-10081}:80
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - hotdog-or-not-net
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  #########################
+  ###### Redis Cache ######
+  #########################
+  redis:
+    image: redis:7.0.15-alpine3.20
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD:-password}
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    networks:
+      - hotdog-or-not-net
+  redis-ui:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: redis
+      REDIS_HOST: redis
+      REDIS_PORT: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+      HTTP_USER: ${REDIS_UI_USER:-user}
+      HTTP_PASSWORD: ${REDIS_UI_PASSWORD:-password}
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -O - http://localhost:8081" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${REDIS_UI_PORT:-8081}:8081
+    networks:
+      - hotdog-or-not-net
+    depends_on:
+      redis:
+        condition: service_healthy
+  
+  ########################
+  ###### S3 Storage ######
+  ########################
+  s3:
+    image: minio/minio
+    restart: always
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+    environment:
+      MINIO_ROOT_USER: ${S3_USER:-user}
+      MINIO_ROOT_PASSWORD: ${S3_PASSWORD:-password}
+    healthcheck:
+      test: [ "CMD-SHELL", "mc ready local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${S3_PORT:-9000}:9000
+      - ${S3_CONSOLE_PORT:-9001}:9001
+    volumes:
+      - s3-data:/data
+    networks:
+      - hotdog-or-not-net
+
+  ##########################
+  ###### Apache Kafka ######
+  ##########################
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 2181 || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${ZOOKEEPER_PORT:-2181}:2181
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+    networks:
+      - hotdog-or-not-net
+  kafka-broker:
+    image: confluentinc/cp-kafka
+    restart: always
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 9092 || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${KAFKA_BROKER_PORT:-9092}:9092
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - hotdog-or-not-net
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-broker:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -O - http://localhost:8080" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - ${KAFKA_UI_PORT:-8080}:8080
+    networks:
+      - hotdog-or-not-net
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+      kafka-broker:
+        condition: service_healthy
