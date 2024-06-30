@@ -4,7 +4,7 @@ from i18next import config as locale_config
 
 from app.config import config
 
-logger = logging.getLogger("locale")
+logger = logging.getLogger("i18n")
 
 
 def configure_locale():

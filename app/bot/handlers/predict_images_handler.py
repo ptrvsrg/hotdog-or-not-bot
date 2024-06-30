@@ -136,7 +136,10 @@ async def process_select_image(
     await callback.message.answer(
         t(
             "message.probability_with_index",
-            params={"probability": round(prob * 100, 4), "index": callback_data.index},
+            params={
+                "probability": round(prob * 100, 4),
+                "index": callback_data.photo_index,
+            },
         ),
         reply_markup=create_result_feedback_menu(
             callback_data.message_id, prob >= PredictService.CLASSIFICATION_THRESHOLD
@@ -164,16 +167,16 @@ async def feedback_prediction(
 
     # Add statistics
     username = get_username_from_callback(callback)
-    if callback_data.action.startswith("success"):
+    if callback_data.is_success:
         statistics_service.add_successful_prediction(username)
-    elif callback_data.action.startswith("fail"):
+    else:
         statistics_service.add_failed_predictions(username)
 
     # Upload image to Yandex Disk
-    if callback_data.action in ["success_hotdog", "fail_not_hotdog"]:
-        await yandex_disk_service.upload_file(file_bytes, "hotdog")
-    if callback_data.action in ["success_not_hotdog", "fail_hotdog"]:
+    if callback_data.is_success ^ callback_data.is_hotdog:
         await yandex_disk_service.upload_file(file_bytes, "not_hotdog")
+    else:
+        await yandex_disk_service.upload_file(file_bytes, "hotdog")
 
     # Show message
     await callback.message.edit_reply_markup(reply_markup=None)

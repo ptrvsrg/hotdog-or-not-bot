@@ -1,7 +1,6 @@
 from app.config import config
 from app.db.repository import (
     user_repository,
-    subscription_repository,
     statistics_repository,
 )
 from app.service.detect_service import DetectService
@@ -15,7 +14,6 @@ from app.service.exception.user_exceptions import (
 )
 from app.service.predict_service import PredictService
 from app.service.statistics_service import StatisticsService
-from app.service.subscription_service import SubscriptionService
 from app.service.user_service import UserService
 from app.service.yandex_disk_service import YandexDiskService
 
@@ -26,11 +24,9 @@ predict_service = PredictService(
     config.predict_model.path,
 )
 statistics_service = StatisticsService(statistics_repository)
-subscription_service = SubscriptionService(subscription_repository)
 user_service = UserService(
     config.bot.owner_username,
     user_repository,
-    subscription_repository,
     statistics_repository,
 )
 yandex_disk_service = YandexDiskService(
@@ -44,8 +40,6 @@ __all__ = [
     "PredictService",
     "statistics_service",
     "StatisticsService",
-    "subscription_service",
-    "SubscriptionService",
     "user_service",
     "UserService",
     "UserNotFoundException",

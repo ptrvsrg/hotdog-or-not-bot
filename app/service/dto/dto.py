@@ -1,20 +1,7 @@
 from dataclasses import dataclass
 
 from app.config import config
-from app.db.entity import User, Subscription, Statistics
-
-
-@dataclass
-class SubscriptionDto:
-    name: str
-    total_daily_predictions: int
-
-    @classmethod
-    def from_orm(cls, subscription: Subscription):
-        return cls(
-            name=subscription.name,
-            total_daily_predictions=subscription.total_daily_predictions,
-        )
+from app.db.entity import User, Statistics
 
 
 @dataclass
@@ -45,7 +32,6 @@ class UserDto:
     is_banned: bool
     is_admin: bool
     is_owner: bool
-    subscription: SubscriptionDto
     statistics: StatisticsDto
 
     @classmethod
@@ -55,6 +41,5 @@ class UserDto:
             is_banned=not user.is_enabled,
             is_admin=user.is_admin,
             is_owner=user.username == config.bot.owner_username,
-            subscription=SubscriptionDto.from_orm(user.subscription),
             statistics=StatisticsDto.from_orm(user.statistics),
         )

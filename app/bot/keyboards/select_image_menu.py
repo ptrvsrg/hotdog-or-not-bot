@@ -13,7 +13,7 @@ def create_select_image_menu(message_ids: list[int]) -> InlineKeyboardMarkup:
             InlineKeyboardButton(
                 text=str(i + 1),
                 callback_data=SelectImageCallbackFactory(
-                    index=i + 1, message_id=message_id
+                    photo_index=i + 1, message_id=message_id
                 ).pack(),
             )
         ]

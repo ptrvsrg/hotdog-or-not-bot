@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from i18next import trans as t
 
-from app.bot.callback_data import MainMenuCallbackFactory
+from app.bot.callback_data import MainMenuCallbackFactory, MainMenuCallbackAction
 from app.bot.keyboards import create_cancel_menu
 from app.bot.states import OwnerStates
 from app.service import user_service, UserNotAdminException, UserAlreadyAdminException
@@ -11,7 +11,9 @@ from app.service import user_service, UserNotAdminException, UserAlreadyAdminExc
 router = Router(name="owner")
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "add_admin"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.ADD_ADMIN)
+)
 async def add_admin(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
         t("message.enter_username"), reply_markup=create_cancel_menu()
@@ -37,7 +39,9 @@ async def process_add(message: Message, state: FSMContext):
     await state.clear()
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "remove_admin"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.REMOVE_ADMIN)
+)
 async def remove_admin(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
         t("message.enter_username"), reply_markup=create_cancel_menu()

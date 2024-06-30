@@ -49,7 +49,6 @@ async def start_bot():
         menu_router,
         admin_router,
         owner_router,
-        subscription_router,
         profile_router,
         cancel_router,
         predict_router,
@@ -60,7 +59,6 @@ async def start_bot():
     dp.include_router(admin_router)
     dp.include_router(owner_router)
     dp.include_router(profile_router)
-    dp.include_router(subscription_router)
     dp.include_router(cancel_router)
     dp.include_router(predict_router)
 
