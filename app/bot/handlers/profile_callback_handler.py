@@ -2,14 +2,17 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from i18next import trans as t
 
-from app.bot.callback_data import MainMenuCallbackFactory
+from app.bot.callback_data import MainMenuCallbackFactory, MainMenuCallbackAction
 from app.bot.utils.callback_utils import get_username_from_callback
+from app.config import config
 from app.service import user_service
 
 router = Router(name="profile")
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "show_profile"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.SHOW_PROFILE)
+)
 async def show_profile(callback: CallbackQuery):
     # Find user
     username = get_username_from_callback(callback)
@@ -26,17 +29,9 @@ async def show_profile(callback: CallbackQuery):
     else:
         role = t("message.user")
 
-    # Get subscription status
-    if user.subscription.total_daily_predictions == -1:
-        limit_remainder = t("message.unlimited")
-    else:
-        remaining_predictions = (
-            user.subscription.total_daily_predictions
-            - user.statistics.daily_predictions
-        )
-        limit_remainder = (
-            f"{remaining_predictions}/{user.subscription.total_daily_predictions}"
-        )
+    # Get limit status
+    remaining_predictions = config.bot.daily_limit - user.statistics.daily_predictions
+    limit_remainder = f"{remaining_predictions}/{config.bot.daily_limit}"
 
     # Show message
     content = t(

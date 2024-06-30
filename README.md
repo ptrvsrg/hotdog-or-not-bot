@@ -1,10 +1,10 @@
 <h1 align="center">Hotdog or Not Bot</h1>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/github/license/ptrvsrg/hotdog-or-not-bot?color=56BEB8">
-  <img alt="Github issues" src="https://img.shields.io/github/issues/ptrvsrg/hotdog-or-not-bot?color=56BEB8" />
-  <img alt="Github forks" src="https://img.shields.io/github/forks/ptrvsrg/hotdog-or-not-bot?color=56BEB8" />
-  <img alt="Github stars" src="https://img.shields.io/github/stars/ptrvsrg/hotdog-or-not-bot?color=56BEB8" />
+  <img alt="License" src="https://img.shields.io/github/license/ptrvsrg/hotdog-or-not-bot?color=56BEB8&style=flat">
+  <img alt="Github issues" src="https://img.shields.io/github/issues/ptrvsrg/hotdog-or-not-bot?color=56BEB8&style=flat" />
+  <img alt="Github forks" src="https://img.shields.io/github/forks/ptrvsrg/hotdog-or-not-bot?color=56BEB8&style=flat" />
+  <img alt="Github stars" src="https://img.shields.io/github/stars/ptrvsrg/hotdog-or-not-bot?color=56BEB8&style=flat" />
 </p>
 
 ## About
@@ -40,6 +40,8 @@ Before starting, you need to have:
 
 ## Starting
 
+### Local
+
 1. Clone this project
 
 ```shell
@@ -60,7 +62,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Run http tunnel
+4. (Optional) Run http tunnel
 
 > **_NOTE:_** Run in a separate terminal.
 
@@ -73,10 +75,10 @@ ngrok http 8080
 
 5. Set up environment variables
 
-> **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL from ngrok\>/webhook
+> **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL\>/webhook
 
 ```shell
-cp .env.exmaple .env
+cp .env.local.exmaple .env
 nano .env
 export $(cat .env | xargs)
 ```
@@ -84,19 +86,42 @@ export $(cat .env | xargs)
 6. Start database and cache
 
 ```shell
-docker compose --env-file .env up -d
+docker compose --file docker-compose.local.yml --env-file .env up -d
 ```
 
-7. Migrate database
-
-```shell
-python -m yoyo apply --database postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} ${MIGRATIONS_DIR}
-```
-
-8. Run application:
+7. Run application:
 
 ```shell
 python app/main.py
+```
+
+### Docker
+
+1. Install `docker-compose.yml`:
+
+```shell
+wget https://github.com/ptrvsrg/hotdog-or-not-bot/blob/<release_version>/docker-compose.yml
+```
+
+2. Install example environment file:
+
+```shell
+wget https://github.com/ptrvsrg/hotdog-or-not-bot/blob/<release_version>/.env.docker.example
+```
+
+3. Set up environment variables
+
+> **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL\>/webhook
+
+```shell
+cp .env.docker.exmaple .env
+nano .env
+```
+
+4. Run containers:
+
+```shell
+docker compose --file docker-compose.yml --env-file .env up -d
 ```
 
 ## Contribution to the project

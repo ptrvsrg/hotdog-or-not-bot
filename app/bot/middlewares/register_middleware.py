@@ -4,6 +4,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message, TelegramObject
 
 from app.bot.utils.message_utils import get_username_from_message
+from app.config import config
 from app.service import user_service
 
 
@@ -21,5 +22,7 @@ class RegisterMiddleware(BaseMiddleware):
         username = get_username_from_message(event)
         user = user_service.get_user_by_username(username)
         if user is None:
-            user_service.create_user(username)
+            user_service.create_user(
+                username, is_admin=config.bot.owner_username == username
+            )
         return await handler(event, data)
