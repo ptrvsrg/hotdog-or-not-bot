@@ -2,9 +2,9 @@ from pydantic import BaseModel, SecretStr
 
 
 class AppConfigModel(BaseModel):
-    major_version: int
-    minor_version: int
-    patch_version: int
+    major_version: str
+    minor_version: str
+    patch_version: str
     locale_dir: str
 
 
@@ -20,6 +20,7 @@ class BotConfigModel(BaseModel):
     telegram_token: SecretStr
     owner_username: str
     webhook_url: str
+    daily_limit: int
 
 
 class PostgresConfigModel(BaseModel):

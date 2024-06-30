@@ -4,7 +4,6 @@ from typing import Optional
 from app.db.entity import User, Statistics
 from app.db.repository import (
     UserRepository,
-    SubscriptionRepository,
     StatisticsRepository,
 )
 from app.service.dto import UserDto
@@ -23,12 +22,10 @@ class UserService:
         self,
         owner_username: str,
         user_repository: UserRepository,
-        subscription_repository: SubscriptionRepository,
         statistics_repository: StatisticsRepository,
     ):
         self.owner_username = owner_username
         self.user_repository = user_repository
-        self.subscription_repository = subscription_repository
         self.statistics_repository = statistics_repository
         self.logger = logging.getLogger("UserService")
 
@@ -76,13 +73,8 @@ class UserService:
         if self.exists_user_by_username(username):
             raise DuplicateUserException(username)
 
-        subscription = self.subscription_repository.find_by_name("Free")
-        if subscription is None:
-            raise Exception("Subscription not found")
-
         user = User(
             username=username,
-            subscription_id=subscription.id,
             is_enabled=is_enabled,
             is_admin=is_admin,
         )
@@ -188,7 +180,7 @@ class UserService:
         if user is None:
             self.create_user(username)
             raise UserNotBannedException(username)
-        if not user.is_enabled:
+        if user.is_enabled:
             raise UserNotBannedException(username)
         user.is_enabled = True
         self.user_repository.save(user)

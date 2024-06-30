@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from sqlalchemy.orm import Session
 
-from app.db.entity import User, Subscription, Statistics
+from app.db.entity import User, Statistics
 
 
 class UserRepository:
@@ -22,7 +22,6 @@ class UserRepository:
         """
         return (
             self.session.query(User)
-            .join(Subscription)
             .join(Statistics)
             .filter(User.username == username)
             .first()
@@ -41,7 +40,6 @@ class UserRepository:
         """
         return (
             self.session.query(User)
-            .join(Subscription)
             .join(Statistics)
             .filter(User.is_enabled == is_enabled)
             .all()
@@ -60,7 +58,6 @@ class UserRepository:
         """
         return (
             self.session.query(User)
-            .join(Subscription)
             .join(Statistics)
             .filter(User.is_admin == is_admin)
             .all()
@@ -74,7 +71,7 @@ class UserRepository:
         Returns:
             List[User]: A list of user objects.
         """
-        return self.session.query(User).join(Subscription).join(Statistics).all()
+        return self.session.query(User).join(Statistics).all()
 
     def exists_by_username(self, username) -> bool:
         """

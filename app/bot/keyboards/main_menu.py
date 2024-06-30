@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from i18next import trans as t
 
-from app.bot.callback_data import MainMenuCallbackFactory
+from app.bot.callback_data import MainMenuCallbackFactory, MainMenuCallbackAction
 from app.service import user_service
 
 
@@ -13,12 +13,8 @@ def create_main_menu(username: str) -> InlineKeyboardMarkup:
     user_buttons = [
         InlineKeyboardButton(
             text=t("button.profile"),
-            callback_data=MainMenuCallbackFactory(action="show_profile").pack(),
-        ),
-        InlineKeyboardButton(
-            text=t("button.subscriptions"),
             callback_data=MainMenuCallbackFactory(
-                action="show_subscription_store"
+                action=MainMenuCallbackAction.SHOW_PROFILE
             ).pack(),
         ),
     ]
@@ -28,21 +24,27 @@ def create_main_menu(username: str) -> InlineKeyboardMarkup:
         admin_buttons = [
             InlineKeyboardButton(
                 text=t("button.ban_user"),
-                callback_data=MainMenuCallbackFactory(action="ban_user").pack(),
+                callback_data=MainMenuCallbackFactory(
+                    action=MainMenuCallbackAction.BAN_USER
+                ).pack(),
             ),
             InlineKeyboardButton(
                 text=t("button.unban_user"),
-                callback_data=MainMenuCallbackFactory(action="unban_user").pack(),
+                callback_data=MainMenuCallbackFactory(
+                    action=MainMenuCallbackAction.UNBAN_USER
+                ).pack(),
             ),
             InlineKeyboardButton(
                 text=t("button.list_banned_users"),
                 callback_data=MainMenuCallbackFactory(
-                    action="list_banned_users"
+                    action=MainMenuCallbackAction.SHOW_BANNED_USERS
                 ).pack(),
             ),
             InlineKeyboardButton(
                 text=t("button.list_admins"),
-                callback_data=MainMenuCallbackFactory(action="list_admins").pack(),
+                callback_data=MainMenuCallbackFactory(
+                    action=MainMenuCallbackAction.SHOW_ADMINS
+                ).pack(),
             ),
         ]
 

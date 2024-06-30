@@ -1,7 +1,7 @@
 def run_app():
     # Configure logger
     import logging as sys_logging
-    from app.logging import configure_logging
+    from app.logger import configure_logging
 
     configure_logging()
 
@@ -12,8 +12,8 @@ def run_app():
         sys_logging.DEBUG if config.server.debug else sys_logging.INFO
     )
 
-    # Configure locale
-    from app.locale import configure_locale as configure_locales
+    # Configure i18n
+    from app.i18n import configure_locale as configure_locales
 
     configure_locales()
 

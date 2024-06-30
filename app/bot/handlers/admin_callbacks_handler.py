@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from i18next import trans as t
 
-from app.bot.callback_data import MainMenuCallbackFactory
+from app.bot.callback_data import MainMenuCallbackFactory, MainMenuCallbackAction
 from app.bot.keyboards import create_cancel_menu
 from app.bot.states import AdminStates
 from app.service import user_service, UserAlreadyBannedException, UserNotBannedException
@@ -11,7 +11,9 @@ from app.service import user_service, UserAlreadyBannedException, UserNotBannedE
 router = Router(name="admin")
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "ban_user"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.BAN_USER)
+)
 async def ban_user(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
         t("message.enter_username"), reply_markup=create_cancel_menu()
@@ -40,7 +42,9 @@ async def process_ban(message: Message, state: FSMContext):
     await state.clear()
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "unban_user"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.UNBAN_USER)
+)
 async def unban_user(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
         t("message.enter_username"), reply_markup=create_cancel_menu()
@@ -49,23 +53,29 @@ async def unban_user(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(AdminStates.awaiting_unbanned_username)
-async def process_ban(message: Message, state: FSMContext):
-    if not username.startswith("@"):
+async def process_unban(message: Message, state: FSMContext):
+    unbanned_username = message.text
+
+    if not unbanned_username.startswith("@"):
         await message.answer(t("error.incorrect_username"))
         await state.clear()
         return
 
     try:
-        user_service.unban_user(username[1:])
+        user_service.unban_user(unbanned_username[1:])
         await message.answer(
-            t("message.user_is_unbanned", params={"username": username})
+            t("message.user_is_unbanned", params={"username": unbanned_username})
         )
     except UserNotBannedException as e:
-        await message.answer(t("error.user_not_banned", params={"username": username}))
+        await message.answer(
+            t("error.user_not_banned", params={"username": unbanned_username})
+        )
     await state.clear()
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "list_banned_users"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.SHOW_BANNED_USERS)
+)
 async def list_banned_users(callback: CallbackQuery):
     banned_users = user_service.get_banned_users()
     if len(banned_users) > 0:
@@ -77,7 +87,9 @@ async def list_banned_users(callback: CallbackQuery):
     await callback.message.answer(content)
 
 
-@router.callback_query(MainMenuCallbackFactory.filter(F.action == "list_admins"))
+@router.callback_query(
+    MainMenuCallbackFactory.filter(F.action == MainMenuCallbackAction.SHOW_ADMINS)
+)
 async def list_admins(callback: CallbackQuery):
     admins = user_service.get_admins()
     if len(admins) > 0:
