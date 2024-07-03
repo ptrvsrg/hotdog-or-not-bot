@@ -39,7 +39,6 @@ async def show_profile(callback: CallbackQuery):
         params={
             "username": user.username,
             "role": role,
-            "subscription": user.subscription.name,
             "total_predictions": user.statistics.total_predictions,
             "daily_predictions": user.statistics.daily_predictions,
             "hotdog_predictions": user.statistics.hotdog_predictions,
