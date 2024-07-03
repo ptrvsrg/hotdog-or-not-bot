@@ -6,6 +6,7 @@ from app.bot.utils.message_utils import (
     get_username_from_message,
 )
 from app.service import user_service
+from app.config import config
 
 
 class SubscriptionLimitFilter(BaseFilter):
@@ -17,10 +18,7 @@ class SubscriptionLimitFilter(BaseFilter):
         username = get_username_from_message(message)
         user = user_service.get_user_by_username(username)
 
-        limit_reached = (
-            user.subscription.total_daily_predictions != -1
-            and user.daily_predictions >= user.subscription.total_daily_predictions
-        )
+        limit_reached = user.daily_predictions >= config.bot.daily_limit
 
         if limit_reached:
             await message.answer(t("error.subscription_limit"))
