@@ -100,13 +100,13 @@ python app/main.py
 1. Install `docker-compose.yml`:
 
 ```shell
-wget https://github.com/ptrvsrg/hotdog-or-not-bot/blob/<release_version>/docker-compose.yml
+wget https://raw.githubusercontent.com/ptrvsrg/hotdog-or-not-bot/<release_version>/docker-compose.yml
 ```
 
 2. Install example environment file:
 
 ```shell
-wget https://github.com/ptrvsrg/hotdog-or-not-bot/blob/<release_version>/.env.docker.example
+wget https://raw.githubusercontent.com/ptrvsrg/hotdog-or-not-bot/<release_version>/.env.docker.example
 ```
 
 3. Set up environment variables
@@ -114,7 +114,7 @@ wget https://github.com/ptrvsrg/hotdog-or-not-bot/blob/<release_version>/.env.do
 > **_NOTE:_** Initialize environment variable **WEBHOOK_URL** with the value \<public URL\>/webhook
 
 ```shell
-cp .env.docker.exmaple .env
+cp .env.docker.example .env
 nano .env
 ```
 
