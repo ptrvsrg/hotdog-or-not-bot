@@ -15,9 +15,9 @@ RUN pip3 install --upgrade pip setuptools wheel
 RUN pip3 install -r app/requirements.txt
 
 ENV PYTHONPATH=.
-ENV MAJOR_VERSION=0
-ENV MINOR_VERSION=1
-ENV PATCH_VERSION=0
+ENV MAJOR_VERSION=1
+ENV MINOR_VERSION=0
+ENV PATCH_VERSION=1
 ENV LOCALE_DIR=locales
 ENV DETECT_MODEL_PATH=models/yolov8n.pt
 ENV PREDICT_MODEL_PATH=models/yolov8n-hotdog-cls.pt
