@@ -47,5 +47,6 @@
     "error.only_one_image" : "Only one image can be uploaded",
     "error.image_too_big" : "Image too large",
     "error.subscription_limit" : "Daily prediction limit reached",
-    "error.file_not_found" : "File lifetime expired"
+    "error.file_not_found" : "File lifetime expired",
+    "error.too_many_objects_in_photo": "Too many objects in the photo. Try cropping the photo to no more than 10 objects"
 }

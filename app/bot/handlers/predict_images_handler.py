@@ -59,6 +59,12 @@ async def predict_images(message: Message, bot: Bot, state: FSMContext):
     if len(cropped_images) == 0:
         cropped_images = [file_bytes]
 
+    # Too many objects in the photo
+    if len(cropped_images) > 10:
+        await answer.delete()
+        await message.answer(t("error.too_many_objects_in_photo"))
+        return
+
     #  User must select one image if more than one is detected
     if len(cropped_images) > 1:
         # Send message with cropped images
